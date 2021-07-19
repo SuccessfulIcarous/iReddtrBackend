@@ -3,7 +3,7 @@ import * as express from "express";
 // import * as querystring from "querystring";
 // import * as https from "https";
 // import * as url from "url";
-import { createProxyMiddleware, Options } from "http-proxy-middleware";
+import {createProxyMiddleware, Options} from "http-proxy-middleware";
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
@@ -49,8 +49,14 @@ redditAPIRouterV1.get("/*", async (req, res) => {
 */
 
 const proxyOption: Options = {
-  target: nonauthHostname, changeOrigin: true, logLevel: "debug", pathRewrite: { '^/v1': ""},
-}
+  target: nonauthHostname,
+  changeOrigin: true,
+  logLevel: "debug",
+  pathRewrite: {
+    // eslint-disable-next-line quotes
+    '^/v1': "",
+  },
+};
 const httpProxyToReddit = createProxyMiddleware(proxyOption);
 redditAPIRouterV1.get("/*", httpProxyToReddit);
 
