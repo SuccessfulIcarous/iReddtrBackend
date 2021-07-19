@@ -24,21 +24,20 @@ const generateProxy = (hostname: string, pathToRewrite: string) => {
     changeOrigin: true,
     logLevel: "debug",
     pathRewrite: {
-      // eslint-disable-next-line quotes
       [pathToRewrite]: "",
     },
-  }
-  return createProxyMiddleware(proxyOption)
-}
+  };
+  return createProxyMiddleware(proxyOption);
+};
 
-redditAPIRouterV1.use("/api/*", generateProxy(nonauthHostname, '^/v1/api'));
-redditAPIRouterV1.use("/styles/*", generateProxy(stylesRedditMediaHostname, '^/v1/styles'));
-redditAPIRouterV1.use("/athumbs/*", generateProxy(athumbsRedditMediaHostname, '^/v1/athumbs'));
-redditAPIRouterV1.use("/bthumbs/*", generateProxy(bthumbsRedditMediaHostname, '^/v1/bthumbs'));
-redditAPIRouterV1.use("/cthumbs/*", generateProxy(cthumbsRedditMediaHostname, '^/v1/cthumbs'));
-redditAPIRouterV1.use("/dthumbs/*", generateProxy(dthumbsRedditMediaHostname, '^/v1/dthumbs'));
-redditAPIRouterV1.use("/ethumbs/*", generateProxy(ethumbsRedditMediaHostname, '^/v1/ethumbs'));
-redditAPIRouterV1.use("/fthumbs/*", generateProxy(fthumbsRedditMediaHostname, '^/v1/fthumbs'));
-redditAPIRouterV1.use("/gthumbs/*", generateProxy(gthumbsRedditMediaHostname, '^/v1/gthumbs'));
+redditAPIRouterV1.use("/api/*", generateProxy(nonauthHostname, "^/v1/api"));
+redditAPIRouterV1.use("/styles/*", generateProxy(stylesRedditMediaHostname, "^/v1/styles"));
+redditAPIRouterV1.use("/athumbs/*", generateProxy(athumbsRedditMediaHostname, "^/v1/athumbs"));
+redditAPIRouterV1.use("/bthumbs/*", generateProxy(bthumbsRedditMediaHostname, "^/v1/bthumbs"));
+redditAPIRouterV1.use("/cthumbs/*", generateProxy(cthumbsRedditMediaHostname, "^/v1/cthumbs"));
+redditAPIRouterV1.use("/dthumbs/*", generateProxy(dthumbsRedditMediaHostname, "^/v1/dthumbs"));
+redditAPIRouterV1.use("/ethumbs/*", generateProxy(ethumbsRedditMediaHostname, "^/v1/ethumbs"));
+redditAPIRouterV1.use("/fthumbs/*", generateProxy(fthumbsRedditMediaHostname, "^/v1/fthumbs"));
+redditAPIRouterV1.use("/gthumbs/*", generateProxy(gthumbsRedditMediaHostname, "^/v1/gthumbs"));
 
 export const reddit = functions.region("asia-southeast2").https.onRequest(redditAPI);
