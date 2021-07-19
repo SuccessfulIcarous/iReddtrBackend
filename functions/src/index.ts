@@ -16,7 +16,7 @@ const ethumbsRedditMediaHostname = "https://e.thumbs.redditmedia.com";
 const fthumbsRedditMediaHostname = "https://f.thumbs.redditmedia.com";
 const gthumbsRedditMediaHostname = "https://g.thumbs.redditmedia.com";
 
-redditAPI.use("*/v1", redditAPIRouterV1);
+redditAPI.use("/v1", redditAPIRouterV1);
 
 const generateProxy = (hostname: string, pathToRewrite: string) => {
   const proxyOption: Options = {
