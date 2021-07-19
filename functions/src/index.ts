@@ -1,64 +1,44 @@
 import * as functions from "firebase-functions";
 import * as express from "express";
-// import * as querystring from "querystring";
-// import * as https from "https";
-// import * as url from "url";
 import {createProxyMiddleware, Options} from "http-proxy-middleware";
-
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
 
 const redditAPI = express();
 // eslint-disable-next-line new-cap
 const redditAPIRouterV1 = express.Router();
 
 const nonauthHostname = "https://www.reddit.com";
+const stylesRedditMediaHostname = "https://styles.redditmedia.com";
+const athumbsRedditMediaHostname = "https://a.thumbs.redditmedia.com";
+const bthumbsRedditMediaHostname = "https://b.thumbs.redditmedia.com";
+const cthumbsRedditMediaHostname = "https://c.thumbs.redditmedia.com";
+const dthumbsRedditMediaHostname = "https://d.thumbs.redditmedia.com";
+const ethumbsRedditMediaHostname = "https://e.thumbs.redditmedia.com";
+const fthumbsRedditMediaHostname = "https://f.thumbs.redditmedia.com";
+const gthumbsRedditMediaHostname = "https://g.thumbs.redditmedia.com";
 
 redditAPI.use("*/v1", redditAPIRouterV1);
-/*
-redditAPIRouterV1.get("/*", async (req, res) => {
-  const bearerToken = req.headers.authorization;
-  functions.logger.debug(`${bearerToken ? "Has Bearer Token" : "No Bearer Token"}`);
-  let data = "";
 
-  const newUrl = new url.URL(`${req.path}?${querystring.stringify(req.query as any)}`, nonauthHostname);
-  functions.logger.debug(`Reddit URL: ${newUrl.toString()}`);
+const generateProxy = (hostname: string, pathToRewrite: string) => {
+  const proxyOption: Options = {
+    target: hostname,
+    changeOrigin: true,
+    logLevel: "debug",
+    pathRewrite: {
+      // eslint-disable-next-line quotes
+      [pathToRewrite]: "",
+    },
+  }
+  return createProxyMiddleware(proxyOption)
+}
 
-  const apiReq = https.get(newUrl, (apiRes) => {
-    apiRes.on("data", (chunk) => {
-      data += chunk;
-    });
-
-    apiRes.on("end", () => {
-      res.send(JSON.parse(data));
-    });
-  });
-
-  apiReq.on("error", (apiError) => {
-    functions.logger.error(apiError);
-    res.sendStatus(500);
-  });
-
-  apiReq.end();
-});
-*/
-
-const proxyOption: Options = {
-  target: nonauthHostname,
-  changeOrigin: true,
-  logLevel: "debug",
-  pathRewrite: {
-    // eslint-disable-next-line quotes
-    '^/v1': "",
-  },
-};
-const httpProxyToReddit = createProxyMiddleware(proxyOption);
-redditAPIRouterV1.get("/*", httpProxyToReddit);
-
+redditAPIRouterV1.use("/api/*", generateProxy(nonauthHostname, '^/v1/api'));
+redditAPIRouterV1.use("/styles/*", generateProxy(stylesRedditMediaHostname, '^/v1/styles'));
+redditAPIRouterV1.use("/athumbs/*", generateProxy(athumbsRedditMediaHostname, '^/v1/athumbs'));
+redditAPIRouterV1.use("/bthumbs/*", generateProxy(bthumbsRedditMediaHostname, '^/v1/bthumbs'));
+redditAPIRouterV1.use("/cthumbs/*", generateProxy(cthumbsRedditMediaHostname, '^/v1/cthumbs'));
+redditAPIRouterV1.use("/dthumbs/*", generateProxy(dthumbsRedditMediaHostname, '^/v1/dthumbs'));
+redditAPIRouterV1.use("/ethumbs/*", generateProxy(ethumbsRedditMediaHostname, '^/v1/ethumbs'));
+redditAPIRouterV1.use("/fthumbs/*", generateProxy(fthumbsRedditMediaHostname, '^/v1/fthumbs'));
+redditAPIRouterV1.use("/gthumbs/*", generateProxy(gthumbsRedditMediaHostname, '^/v1/gthumbs'));
 
 export const reddit = functions.region("asia-southeast2").https.onRequest(redditAPI);
